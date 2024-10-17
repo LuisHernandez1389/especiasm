@@ -13,7 +13,7 @@ export class TabsPage implements OnInit {
   saveToLocalStorage() {
     if (this.MAC) {
       localStorage.setItem('savedText', this.MAC);
-      alert('Text saved to localStorage');
+      alert('MAC guardada');
       this.MAC = ''; // Clear input field after saving
     } else {
       alert('Please enter some text');

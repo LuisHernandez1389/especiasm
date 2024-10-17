@@ -39,11 +39,9 @@ export class Tab3Page implements OnInit {
     [key: string]: { [key: string]: { precio: string; unidades: number } };
   } = {};
   articulos: { [key: string]: { nombre: string } } = {}; // Almacena los artículos
-
-  private apiUrlMercanciaInicial =
-    'https://information-all-e540a-default-rtdb.firebaseio.com/vendedores/-O4nebKglyw58hbauNpB/mercanciaInicial.json';
+    
   private apiUrlArticulos =
-    'https://information-all-e540a-default-rtdb.firebaseio.com/articulos.json';
+    'https://jassi-productos-default-rtdb.firebaseio.com/articulos.json';
 
   constructor(private http: HttpClient) {
     const usuario = this.obtenerUsuarioLogueado(); // Obtén el usuario logueado al iniciar el componente
@@ -59,6 +57,7 @@ export class Tab3Page implements OnInit {
     } else {
       console.log('No hay usuario logueado');
     }
+    
   }
 
   cargarArticulos() {
@@ -98,7 +97,7 @@ export class Tab3Page implements OnInit {
   }
 
   obtenerMercancia(id: string) {
-    const url = `https://information-all-e540a-default-rtdb.firebaseio.com/vendedores/${id}/mercancia.json`;
+    const url = `https://jassi-productos-default-rtdb.firebaseio.com/vendedores/${id}/mercancia.json`;
     this.http.get(url).subscribe(
       (data) => {
         this.mercancia = data;
@@ -114,8 +113,9 @@ export class Tab3Page implements OnInit {
       }
     );
   }
+  
   obtenerMercanciaInicial(id: string) {
-    const url = `https://information-all-e540a-default-rtdb.firebaseio.com/vendedores/${id}/mercanciaInicial.json`;
+    const url = `https://jassi-productos-default-rtdb.firebaseio.com/vendedores/${id}/mercanciaInicial.json`;
 
     this.http.get(url).subscribe(
       (data) => {
@@ -199,7 +199,7 @@ export class Tab3Page implements OnInit {
   
     // Crear el objeto del corte
     const nuevoCorte = {
-      fecha: new Date().toISOString(), // Guardamos la fecha actual
+      fecha: new Date().toLocaleString(), // Guardamos la fecha actual
       mercanciaArray: this.mercanciaArray,
       mercanciaInicialArray: this.mercanciaInicialArray,
       totalMercancia: this.calcularTotalPrecios(),
@@ -208,7 +208,7 @@ export class Tab3Page implements OnInit {
     };
   
     // Ruta de Firebase para guardar el corte
-    const url = `https://information-all-e540a-default-rtdb.firebaseio.com/vendedores/${usuario.id}/cortes.json`;
+    const url = `https://jassi-productos-default-rtdb.firebaseio.com/vendedores/${usuario.id}/cortes.json`;
   
     // Hacer una solicitud POST para añadir el nuevo corte al array de cortes
     this.http.post(url, nuevoCorte).subscribe(

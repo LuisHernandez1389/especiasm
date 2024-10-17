@@ -18,12 +18,12 @@ export class Tab2Page {
   mercancia: any = {};
   articulos: any = {};
   vendedores: any = {};
-  private apiUrlVentas = 'https://information-all-e540a-default-rtdb.firebaseio.com/ventas.json';
-  private apiUrlArticulos = 'https://information-all-e540a-default-rtdb.firebaseio.com/articulos.json';
-  private apiUrlVendedores = 'https://information-all-e540a-default-rtdb.firebaseio.com/vendedores.json';
+  private apiUrlVentas = 'https://jassi-productos-default-rtdb.firebaseio.com/ventas.json';
+  private apiUrlArticulos = 'https://jassi-productos-default-rtdb.firebaseio.com/articulos.json';
+  private apiUrlVendedores = 'https://jassi-productos-default-rtdb.firebaseio.com/vendedores.json';
   selectedTab: string = 'tab1'; // Tab seleccionado por defecto
   private apiUrl = 'http://localhost:8000/imprimir'; // Cambia esta URL si es necesario
-  MAC_ADDRESS = 'DC:0D:51:1C:3B:03'; // check your mac address in listDevices or discoverUnpaired
+  MAC_ADDRESS = ''; // check your mac address in listDevices or discoverUnpaired
 
   constructor(
     private http: HttpClient, 
@@ -119,14 +119,14 @@ export class Tab2Page {
       const articuloId = item.id;
   
       // Obtener la cantidad actual del artículo en el nodo de "articulos"
-      this.http.get<any>(`https://information-all-e540a-default-rtdb.firebaseio.com/articulos/${articuloId}.json`).subscribe(
+      this.http.get<any>(`https://jassi-productos-default-rtdb.firebaseio.com/articulos/${articuloId}.json`).subscribe(
         articulo => {
           if (articulo && articulo.cantidad) {
             // Descontar la cantidad en el carrito de la cantidad actual del artículo
             const nuevaCantidad = parseInt(articulo.cantidad, 10) - item.cantidad;
   
             // Actualizar la cantidad en el nodo de "articulos"
-            this.http.patch(`https://information-all-e540a-default-rtdb.firebaseio.com/articulos/${articuloId}.json`, { cantidad: nuevaCantidad }).subscribe(
+            this.http.patch(`https://jassi-productos-default-rtdb.firebaseio.com/articulos/${articuloId}.json`, { cantidad: nuevaCantidad }).subscribe(
               response => {
                 console.log(`Unidades del artículo ${articuloId} actualizadas a ${nuevaCantidad}:`, response);
               },
@@ -170,7 +170,7 @@ export class Tab2Page {
         });
 
         // Enviar los datos actualizados al servidor usando PATCH
-        this.http.patch(`https://information-all-e540a-default-rtdb.firebaseio.com/vendedores/${usuario.id}/mercancia.json`, updatedMercancia).subscribe(
+        this.http.patch(`https://jassi-productos-default-rtdb.firebaseio.com/vendedores/${usuario.id}/mercancia.json`, updatedMercancia).subscribe(
           response => {
             console.log('Unidades de mercancía actualizadas:', response);
           },
@@ -215,35 +215,44 @@ export class Tab2Page {
   demoPrint() {
     const encoder = new EscPosEncoder();
     const result = encoder.initialize();
-
+  
     let totalGeneral = 0;
-
+  
     const carritoTexto = this.carrito.map(item => {
       const subtotal = item.cantidad * item.precio;
       totalGeneral += subtotal;
-      return `${item.nombre} ${item.cantidad} - $${item.precio} = $${subtotal}`;
+      // Añadir una nueva línea extra después de cada artículo
+      return `${item.nombre} ${item.cantidad} - $${item.precio} = $${subtotal}\n`;
     }).join('\n');
-
+  
     result
       .codepage('windows1250')
       .align('center')
-      .line('JASSI')
+      .line('PRODUCTOS JASSI')
+      .newline()
+      .line('¡Una Botana con Sabor!')
+      .newline()
+      .line('6444128557')
+      .newline()
       .newline()
       .line(carritoTexto)
+      .newline()
       .newline()
       .line(`Total: $${totalGeneral}`)
       .newline()
       .newline()
       .newline()
+      .newline()
+      .newline()
       .align('left')
       .cut();
-
+  
     const resultByte = result.encode();
-
+  
     const storedMAC = localStorage.getItem('savedText');
     this.MAC_ADDRESS = storedMAC || ''; // Handle null case
-
-    // send byte code into the printer
+  
+    // Enviar el código binario a la impresora
     this.bluetoothSerial.connect(this.MAC_ADDRESS).subscribe(() => {
       this.bluetoothSerial.write(resultByte)
         .then(() => {
@@ -256,6 +265,7 @@ export class Tab2Page {
         });
     });
   }
+  
 
   reset() {
     console.log('reset')

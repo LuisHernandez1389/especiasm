@@ -28,8 +28,8 @@
         </ion-label>
         <ion-button color="danger" (click)="eliminarDelCarrito(item)">Eliminar</ion-button>
       </ion-item>
-      <ion-button expand="full" color="primary" (click)="guardarCarritoEnDB()">Guardar Carrito en DB</ion-button>
     </div>
+
 
     <!-- Contenido de Tab 2 - Mercancia -->
     <div *ngIf="selectedTab === 'tab2'">
@@ -41,3 +41,8 @@
     </div>
   </ion-list>
 </ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-button expand="full" color="primary" (click)="guardarCarritoEnDB()">Guardar Carrito en DB</ion-button>
+  </ion-toolbar>
+</ion-footer>

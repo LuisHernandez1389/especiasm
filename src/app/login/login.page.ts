@@ -11,7 +11,7 @@ export class LoginPage {
   username: string = '';
   password: string = '';
 
-  private apiUrl = 'https://information-all-e540a-default-rtdb.firebaseio.com/vendedores.json';
+  private apiUrl = 'https://jassi-productos-default-rtdb.firebaseio.com/vendedores.json';
   vendedores: any[] = [];
   usuarioLogueado: any = null;
 

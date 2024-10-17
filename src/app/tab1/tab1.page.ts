@@ -9,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['tab1.page.scss']
 })
 export class Tab1Page implements OnInit {
-  private apiUrl = 'https://information-all-e540a-default-rtdb.firebaseio.com/articulos.json';
+  private apiUrl = 'https://jassi-productos-default-rtdb.firebaseio.com/articulos.json';
   articulos: any[] = [];
   
 //////////////////
