@@ -11,12 +11,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
     - name: Set up Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v4
       with:
-        node-version: '18.x'
+        node-version: '20.x'
 
     - name: Install dependencies
       run: |
@@ -29,7 +29,7 @@ jobs:
         npx cap sync
 
     - name: Setup Android SDK
-      uses: android-actions/setup-android@v2
+      uses: android-actions/setup-android@v3
 
     - name: Build Android with Capacitor
       run: |
@@ -39,7 +39,7 @@ jobs:
         ./gradlew assembleDebug
 
     - name: Upload Debug APK
-      uses: actions/upload-artifact@v4    # Actualizado a v4
+      uses: actions/upload-artifact@v4
       with:
         name: app-debug
         path: android/app/build/outputs/apk/debug/app-debug.apk
