@@ -1,0 +1,45 @@
+name: Ionic Android Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18.x'
+
+    - name: Install dependencies
+      run: |
+        npm install
+        npm install -g @capacitor/cli
+
+    - name: Build Ionic app
+      run: |
+        npm run build
+        npx cap sync
+
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v2
+
+    - name: Build Android with Capacitor
+      run: |
+        npx cap add android
+        npx cap sync android
+        cd android
+        ./gradlew assembleDebug
+
+    - name: Upload Debug APK
+      uses: actions/upload-artifact@v2
+      with:
+        name: app-debug
+        path: android/app/build/outputs/apk/debug/app-debug.apk
